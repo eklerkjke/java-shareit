@@ -6,14 +6,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 @Entity
 @Table(name = "items")
 @Data
-@Builder
 @ToString
 public class Item {
 
