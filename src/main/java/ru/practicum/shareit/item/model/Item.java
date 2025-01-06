@@ -1,14 +1,19 @@
 package ru.practicum.shareit.item.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import lombok.Builder;
+import lombok.Data;
 import lombok.ToString;
 
 @Entity
 @Table(name = "items")
-@Getter
-@Setter
+@Data
+@Builder
 @ToString
 public class Item {
 

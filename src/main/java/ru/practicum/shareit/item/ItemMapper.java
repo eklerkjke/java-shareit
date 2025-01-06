@@ -6,7 +6,6 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.Optional;
 
 public class ItemMapper {
-    // Преобразует объект Item в объект ItemDto.
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
                 .id(item.getId())
@@ -18,8 +17,6 @@ public class ItemMapper {
                 .build();
     }
 
-    // Обновляет объект Item на основе данных из ItemDto.
-    // Если поля в ItemDto отсутствуют, используются существующие значения из Item.
     public static Item toItemOnUpdate(ItemDto itemDto, Item item) {
         return Item.builder()
                 .id(itemDto.getId())
@@ -31,7 +28,6 @@ public class ItemMapper {
                 .build();
     }
 
-    // Преобразует объект ItemDto в объект Item.
     public static Item toItem(ItemDto itemDto) {
         return Item.builder()
                 .name(itemDto.getName())
