@@ -6,11 +6,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-
-import javax.xml.transform.stream.StreamSource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class BookingMapper {
 
