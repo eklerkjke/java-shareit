@@ -7,20 +7,12 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.xml.transform.stream.StreamSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class BookingMapper {
-
-    public static Booking toBooking(BookingDto bookingDto, Item item, User booker) {
-        Booking booking = new Booking();
-        booking.setStart(bookingDto.getStart());
-        booking.setEnd(bookingDto.getEnd());
-        booking.setItem(item);
-        booking.setBooker(booker);
-        booking.setStatus(bookingDto.getStatus());
-        return booking;
-    }
 
     public static BookingDto toBookingDto(Booking booking) {
         BookingDto bookingDto = new BookingDto();
@@ -44,10 +36,9 @@ public class BookingMapper {
     }
 
     public static List<BookingDto> mapToBookingDto(Iterable<Booking> bookings) {
-        List<BookingDto> dtos = new ArrayList<>();
-        for (Booking booking : bookings) {
-            dtos.add(toBookingDto(booking));
-        }
-        return dtos;
+        return List.of(bookings)
+                .stream()
+                .map(booking -> toBookingDto((Booking) booking))
+                .toList();
     }
 }

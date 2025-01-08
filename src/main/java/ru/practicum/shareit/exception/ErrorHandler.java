@@ -14,13 +14,13 @@ public class ErrorHandler {
     @ExceptionHandler // Указывает, что этот метод будет вызываться при возникновении MethodArgumentNotValidException
     @ResponseStatus(HttpStatus.BAD_REQUEST) // Устанавливает статус ответа 400 (BAD REQUEST)
     // Метод для обработки исключений валидации аргументов методов
-    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         // Разделение сообщения об ошибке для извлечения причин невалидности
-        String[] messageArray = e.getMessage().split("default message \\[");
+        String[] messageArray = exception.getMessage().split("default message \\[");
         // Создание объекта StringBuilder для формирования сообщения об ошибке
         StringBuilder message = new StringBuilder();
-        for (int i = 1; i < messageArray.length; i++) { // Начинаем с 1, чтобы пропустить первые два элемента
-            message.append(messageArray[i].split("]")[0]); // Извлечение сообщения об ошибке
+        for (int index = 1; index < messageArray.length; index++) { // Начинаем с 1, чтобы пропустить первые два элемента
+            message.append(messageArray[index].split("]")[0]); // Извлечение сообщения об ошибке
             message.append(". "); // Добавление точки после каждого сообщения
         }
         return new ErrorResponse(message.toString()); // Возвращение сформированного сообщения об ошибке
@@ -28,37 +28,37 @@ public class ErrorHandler {
 
     @ExceptionHandler // Указывает, что этот метод будет вызываться при возникновении NotFoundException
     @ResponseStatus(HttpStatus.NOT_FOUND) // Устанавливает статус ответа 404 (NOT FOUND)
-    public ErrorResponse handleNotFoundException(final NotFoundException e) {
-        return new ErrorResponse(e.getMessage()); // Возвращает сообщение об ошибке из исключения
+    public ErrorResponse handleNotFoundException(final NotFoundException exception) {
+        return new ErrorResponse(exception.getMessage()); // Возвращает сообщение об ошибке из исключения
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMissingRequestHeaderException(final MissingRequestHeaderException e) {
-        return new ErrorResponse(e.getMessage());
+    public ErrorResponse handleMissingRequestHeaderException(final MissingRequestHeaderException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleUnAvaliableException(final UnAvaliableException e) {
-        return new ErrorResponse(e.getMessage());
+    public ErrorResponse handleUnAvaliableException(final UnAvaliableException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestException(final BadRequestException e) {
-        return new ErrorResponse(e.getMessage());
+    public ErrorResponse handleBadRequestException(final BadRequestException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleForbiddenException(final ForbiddenException e) {
-        return new ErrorResponse(e.getMessage());
+    public ErrorResponse handleForbiddenException(final ForbiddenException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleTypeMismatch(final MethodArgumentTypeMismatchException e) {
-        return new ErrorResponse(e.getMessage());
+    public ErrorResponse handleTypeMismatch(final MethodArgumentTypeMismatchException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 }
