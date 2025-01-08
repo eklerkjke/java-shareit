@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.validation;
 
+import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingCreate;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.BadRequestException;
@@ -7,7 +8,8 @@ import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.UnAvaliableException;
 import ru.practicum.shareit.item.model.Item;
 
-public class BookingValidationImpl {
+@Service
+public class BookingValidationImpl implements BookingValidation {
 
     public void validateBookingDates(BookingCreate bookingCreate) {
         if (bookingCreate.getStart().equals(bookingCreate.getEnd())) {
