@@ -72,8 +72,11 @@ public class BookingServiceImpl implements BookingService {
 
         getUserById(userId);
         BookingStatus state = parseBookingStatus(status);
+        if (state == BookingStatus.ALL) {
+            state = null;
+        }
 
-        return status == null ?
+        return state == null ?
                 BookingMapper.mapToBookingDto(bookingRepository.findAllByBookerId(userId)) :
                 BookingMapper.mapToBookingDto(bookingRepository.findAllByBookerIdAndStatus(userId, state));
     }
@@ -84,8 +87,11 @@ public class BookingServiceImpl implements BookingService {
         getUserById(ownerId);
 
         BookingStatus state = parseBookingStatus(status);
+        if (state == BookingStatus.ALL) {
+            state = null;
+        }
 
-        return status == null ?
+        return state == null ?
                 BookingMapper.mapToBookingDto(bookingRepository.findAllByItemOwnerId(ownerId)) :
                 BookingMapper.mapToBookingDto(bookingRepository.findAllByItemOwnerIdAndStatus(ownerId, state));
     }
