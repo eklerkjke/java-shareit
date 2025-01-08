@@ -31,10 +31,10 @@ public class BookingMapper {
         return booking;
     }
 
-    public static List<BookingDto> mapToBookingDto(Iterable<Booking> bookings) {
-        return List.of(bookings)
+    public static List<BookingDto> mapToBookingDto(List<Booking> bookings) {
+        return bookings
                 .stream()
-                .map(booking -> toBookingDto((Booking) booking))
+                .map(BookingMapper::toBookingDto)
                 .toList();
     }
 }
