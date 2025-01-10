@@ -5,23 +5,67 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-
-    List<Booking> findAllByBookerId(Long bookerId);
-
-    List<Booking> findAllByBookerIdAndStatus(Long bookerId, BookingStatus status);
-
     @Query("select b from Booking b " +
             "join b.item it " +
             "where it.ownerId = ?1")
     List<Booking> findAllByItemOwnerId(Long ownerId);
 
+    @Query ("select b from Booking b " +
+             "where booker.id = ?1 " +
+             "order by b.start desc")
+    List<Booking> findAllBookings(Long ownerId);
+
+    @Query("select b from Booking b " +
+            "where booker.id = ?1 " +
+            "and (b.start <?2 and b.end >?2)" +
+            "order by b.start desc")
+    List<Booking> findCurrentBookingsByOwnerId(Long ownerId, LocalDateTime currentDate);
+
+    @Query("select b from Booking b " +
+            "join b.item it " +
+            "where it.ownerId = ?1" +
+            "and (b.start <?2 and b.end >?2)" +
+            "order by b.start desc")
+    List<Booking> findCurrentBookingsByItemsOwnerId(Long ownerId, LocalDateTime currentDate);
+
+    @Query("select b from Booking b " +
+            "where booker.id = ?1 " +
+            "and b.end <?2" +
+            "order by b.start desc")
+    List<Booking> findPastBookingsByOwnerId(Long ownerId, LocalDateTime currentDate);
+
+    @Query("select b from Booking b " +
+            "join b.item it " +
+            "where it.ownerId = ?1" +
+            "and b.end <?2" +
+            "order by b.start desc")
+    List<Booking> findPastBookingsByItemsOwnerId(Long ownerId, LocalDateTime currentDate);
+
+    @Query("select b from Booking b " +
+            "where booker.id = ?1 " +
+            "and b.start >?2" +
+            "order by b.start desc")
+    List<Booking> findFutureBookingsByOwnerId(Long ownerId, LocalDateTime currentDate);
+
+    @Query("select b from Booking b " +
+            "join b.item it " +
+            "where it.ownerId = ?1" +
+            "and b.start >?2" +
+            "order by b.start desc")
+    List<Booking> findFutureBookingsByItemsOwnerId(Long ownerId, LocalDateTime currentDate);
+
     @Query("select b from Booking b " +
             "join b.item it " +
             "where it.ownerId = ?1 and b.status = ?2")
-    List<Booking> findAllByItemOwnerIdAndStatus(Long ownerId, BookingStatus status);
+    List<Booking> findAllByBookingsItemsOwnerIdAndStatus(Long ownerId, BookingStatus status);
+
+    @Query("select b from Booking b " +
+            "where booker.id = ?1 and b.status = ?2")
+    List<Booking> findAllByBookingsOwnerIdAndStatus(Long ownerId, BookingStatus status);
 
     @Query("select b from Booking b " +
             "join b.item it " +

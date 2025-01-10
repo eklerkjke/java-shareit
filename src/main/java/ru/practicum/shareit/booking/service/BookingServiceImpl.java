@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.BookingMapper;
+import ru.practicum.shareit.booking.BookingResolver;
 import ru.practicum.shareit.booking.dto.BookingCreate;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.booking.validation.BookingValidation;
@@ -27,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final BookingValidation validation;
+    private final BookingResolver resolver;
 
     @Override
     @Transactional
@@ -66,33 +69,20 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookings(Long userId, String status) {
+    public List<BookingDto> getBookings(Long userId, String state) {
         log.info("Получение данных о резервировании по ID пользователя: {}", userId);
 
         getUserById(userId);
-        BookingStatus state = parseBookingStatus(status);
-        if (state == BookingStatus.ALL) {
-            state = null;
-        }
-
-        return state == null ?
-                BookingMapper.mapToBookingDto(bookingRepository.findAllByBookerId(userId)) :
-                BookingMapper.mapToBookingDto(bookingRepository.findAllByBookerIdAndStatus(userId, state));
+        BookingState bookingState = parseBookingState(state);
+        return BookingMapper.mapToBookingDto(resolver.getBookingByState(bookingState, userId, false));
     }
 
     @Override
-    public List<BookingDto> getBookingsByOwnerId(Long ownerId, String status) {
+    public List<BookingDto> getBookingByItemsOwnerId(Long ownerId, String state) {
         log.info("Получение данных о резервировании по предметам у пользователя с ID: {}", ownerId);
         getUserById(ownerId);
-
-        BookingStatus state = parseBookingStatus(status);
-        if (state == BookingStatus.ALL) {
-            state = null;
-        }
-
-        return state == null ?
-                BookingMapper.mapToBookingDto(bookingRepository.findAllByItemOwnerId(ownerId)) :
-                BookingMapper.mapToBookingDto(bookingRepository.findAllByItemOwnerIdAndStatus(ownerId, state));
+        BookingState bookingState = parseBookingState(state);
+        return BookingMapper.mapToBookingDto(resolver.getBookingByState(bookingState, ownerId, true));
     }
 
     private Booking findById(Long id) {
@@ -110,9 +100,9 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new NotFoundException("Не найден предмет с id: " + itemId));
     }
 
-    private BookingStatus parseBookingStatus(String status) {
+    private BookingState parseBookingState(String status) {
         try {
-            return BookingStatus.valueOf(status.toUpperCase());
+            return BookingState.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new NotFoundException("Не известный статус: " + status);
         }

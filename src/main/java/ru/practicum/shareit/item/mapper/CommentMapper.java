@@ -5,7 +5,6 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommentMapper {
@@ -32,11 +31,10 @@ public class CommentMapper {
     }
 
     // Преобразует список объектов Comment в список объектов CommentDto.
-    public static List<CommentDto> mapToCommentDto(Iterable<Comment> comments) {
-        List<CommentDto> dtos = new ArrayList<>();
-        for (Comment comment : comments) {
-            dtos.add(toCommentDto(comment));
-        }
-        return dtos;
+    public static List<CommentDto> mapToCommentDto(List<Comment> comments) {
+        return comments
+                .stream()
+                .map(CommentMapper::toCommentDto)
+                .toList();
     }
 }
