@@ -24,7 +24,6 @@ public class BookingResolver {
                 case FUTURE -> repository.findFutureBookingsByItemsOwnerId(ownerId, LocalDateTime.now());
                 case WAITING -> repository.findAllByBookingsItemsOwnerIdAndStatus(ownerId, BookingStatus.WAITING);
                 case REJECTED -> repository.findAllByBookingsItemsOwnerIdAndStatus(ownerId, BookingStatus.REJECTED);
-                default -> List.of();
             };
         } else {
             return switch (state) {
@@ -34,7 +33,6 @@ public class BookingResolver {
                 case FUTURE -> repository.findFutureBookingsByOwnerId(ownerId, LocalDateTime.now());
                 case WAITING -> repository.findAllByBookingsOwnerIdAndStatus(ownerId, BookingStatus.WAITING);
                 case REJECTED -> repository.findAllByBookingsOwnerIdAndStatus(ownerId, BookingStatus.REJECTED);
-                default -> List.of();
             };
         }
     }
