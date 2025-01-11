@@ -6,6 +6,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice // Аннотация, указывающая, что класс будет обрабатывать исключения в REST-контроллерах
 public class ErrorHandler {
@@ -18,7 +19,7 @@ public class ErrorHandler {
         String[] messageArray = exception.getMessage().split("default message \\[");
         // Создание объекта StringBuilder для формирования сообщения об ошибке
         StringBuilder message = new StringBuilder();
-        for (int index = 2; index < messageArray.length; index++) { // Начинаем с 2, чтобы пропустить первые два элемента
+        for (int index = 1; index < messageArray.length; index++) { // Начинаем с 1, чтобы пропустить первые два элемента
             message.append(messageArray[index].split("]")[0]); // Извлечение сообщения об ошибке
             message.append(". "); // Добавление точки после каждого сообщения
         }
@@ -31,15 +32,33 @@ public class ErrorHandler {
         return new ErrorResponse(exception.getMessage()); // Возвращает сообщение об ошибке из исключения
     }
 
-    @ExceptionHandler // Указывает, что этот метод будет вызываться при возникновении EmailDuplicationException
-    @ResponseStatus(HttpStatus.CONFLICT) // Устанавливает статус ответа 409 (CONFLICT)
-    public ErrorResponse handleEmailDuplicationException(final EmailDuplicationException exception) {
-        return new ErrorResponse(exception.getMessage()); // Возвращает сообщение об ошибке из исключения
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMissingRequestHeaderException(final MissingRequestHeaderException exception) {
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMissingRequestHeaderException(final MissingRequestHeaderException exception) {
+    public ErrorResponse handleUnAvaliableException(final UnAvaliableException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleBadRequestException(final BadRequestException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleForbiddenException(final ForbiddenException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleTypeMismatch(final MethodArgumentTypeMismatchException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 }
