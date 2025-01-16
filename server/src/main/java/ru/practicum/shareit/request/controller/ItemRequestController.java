@@ -35,8 +35,7 @@ public class ItemRequestController {
     }
 
     @GetMapping("/all")
-    public List<ItemRequestDto> getAllRequests(@RequestHeader(name = Headers.HEADER_USER_ID)) {
+    public List<ItemRequestDto> getAllRequests() {
         return requestService.getAllRequests();
     }
-
 }
