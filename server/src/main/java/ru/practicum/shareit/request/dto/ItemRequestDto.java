@@ -14,6 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ItemRequestDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
