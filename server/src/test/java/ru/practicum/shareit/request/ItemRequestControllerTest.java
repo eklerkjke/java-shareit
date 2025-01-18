@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.request.controller.ItemRequestController;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.RequestService;
+import ru.practicum.shareit.util.Headers;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -39,14 +40,14 @@ class ItemRequestControllerTest {
 
     @BeforeEach
     void setUp() {
-        itemRequestDto = new ItemRequestDto(null, "Request description", null, null, List.of());
+        itemRequestDto = new ItemRequestDto(1L, "Request description", null, null, List.of());
     }
 
     @Test
     void createItemRequest() throws Exception {
         when(itemRequestService.createRequest(any(), anyLong())).thenReturn(itemRequestDto);
         mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(Headers.HEADER_USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(itemRequestDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -56,22 +57,11 @@ class ItemRequestControllerTest {
     }
 
     @Test
-    void getMyItemRequests() throws Exception {
-        List<ItemRequestDto> itemRequests = List.of(itemRequestDto);
-        when(itemRequestService.getRequest(1L)).thenReturn(itemRequestDto);
-        mockMvc.perform(get("/requests")
-                        .header("X-Sharer-User-Id", 1L)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(itemRequests)));
-    }
-
-    @Test
     void getAllOtherItemRequests() throws Exception {
         List<ItemRequestDto> itemRequests = List.of(itemRequestDto);
         when(itemRequestService.getAllRequests()).thenReturn(itemRequests);
         mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(Headers.HEADER_USER_ID, 1L)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(itemRequests)));

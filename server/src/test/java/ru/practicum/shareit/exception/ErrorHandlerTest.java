@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.util.Headers;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,7 +31,7 @@ class ErrorHandlerTest {
         when(bookingService.getBookingById(1L, 999L)).thenThrow(new NotFoundException("Item not found"));
 
         mockMvc.perform(get("/bookings/999")
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(Headers.HEADER_USER_ID, 1L))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("Item not found"));
     }
@@ -41,7 +42,7 @@ class ErrorHandlerTest {
                 .thenThrow(new UnAvaliableException("Item is unavailable"));
 
         mockMvc.perform(get("/bookings/1")
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(Headers.HEADER_USER_ID, 1L))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Item is unavailable"));
     }
@@ -58,7 +59,7 @@ class ErrorHandlerTest {
         when(bookingService.getBookingById(1L, 1L)).thenThrow(new BadRequestException("Bad request"));
 
         mockMvc.perform(get("/bookings/1")
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(Headers.HEADER_USER_ID, 1L))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Bad request"));
     }
@@ -69,7 +70,7 @@ class ErrorHandlerTest {
                 .thenThrow(new ForbiddenException("Access forbidden"));
 
         mockMvc.perform(get("/bookings/1")
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(Headers.HEADER_USER_ID, 1L))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("Access forbidden"));
     }
@@ -80,7 +81,7 @@ class ErrorHandlerTest {
                 .thenThrow(new MethodArgumentTypeMismatchException(null, null, null, null, null));
 
         mockMvc.perform(get("/bookings/1")
-                        .header("X-Sharer-User-Id", 1L))
+                        .header(Headers.HEADER_USER_ID, 1L))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.error").exists());
     }

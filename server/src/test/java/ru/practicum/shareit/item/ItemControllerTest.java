@@ -13,6 +13,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoBooking;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.util.Headers;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -52,7 +53,7 @@ class ItemControllerTest {
     void createItem() throws Exception {
         when(itemService.createItem(any())).thenReturn(itemDto);
         mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(Headers.HEADER_USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -65,7 +66,7 @@ class ItemControllerTest {
     void updateItem() throws Exception {
         when(itemService.updateItem(any())).thenReturn(itemDto);
         mockMvc.perform(patch("/items/1")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(Headers.HEADER_USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -79,7 +80,7 @@ class ItemControllerTest {
         List<ItemDtoBooking> items = List.of(itemDtoBooking);
         when(itemService.getAllItemByOwnerId(1L)).thenReturn(items);
         mockMvc.perform(get("/items")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(Headers.HEADER_USER_ID, 1L)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(items)));
@@ -108,7 +109,7 @@ class ItemControllerTest {
     void createComment() throws Exception {
         when(itemService.createComment(any(), anyLong(), anyLong())).thenReturn(commentDto);
         mockMvc.perform(post("/items/1/comment")
-                        .header("X-Sharer-User-Id", 1L)
+                        .header(Headers.HEADER_USER_ID, 1L)
                         .content(objectMapper.writeValueAsString(commentDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
