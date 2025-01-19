@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @EqualsAndHashCode(of = "id")
-
 @Builder
 @Entity
 @Table(name = "requests", schema = "public")

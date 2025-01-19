@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class RequestServiceImpl implements RequestService { //добавить интерфейс
+public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final UserService userService;
     private final ItemService itemService;
